@@ -117,6 +117,72 @@
     .error {
       color: red;
     }
+    .separator {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 35px 0;
+}
+
+.results-section {
+  margin-top: 20px;
+}
+
+.results-section h2 {
+  text-align: center;
+}
+
+.results-note {
+  text-align: center;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.refresh-button {
+  width: auto;
+  display: block;
+  margin: 0 auto 20px auto;
+  padding: 10px 18px;
+  background: #555;
+}
+
+.results-wrapper {
+  overflow-x: auto;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.results-table th,
+.results-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.results-table th {
+  background: #f4f6f8;
+}
+
+.results-table td:first-child {
+  text-align: left;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.available {
+  color: green;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.unavailable {
+  color: #999;
+  font-size: 18px;
+}
   </style>
 </head>
 
@@ -151,75 +217,88 @@
     <h3>Please select all available times:</h3>
 
     <div class="slot">
-      <label>
-        <input type="checkbox" id="slot1">
-        <div>
-          <div class="melbourne">
-            Tuesday, 20 October 2026 — 1:00 pm Melbourne
-          </div>
-          <div class="singapore">
-            10:00 am Singapore
-          </div>
-        </div>
-      </label>
+  <label>
+    <input type="checkbox" id="slot1">
+    <div>
+      <div class="melbourne">
+        Wednesday, 14 October 2026 — 2:00 pm Melbourne
+      </div>
+      <div class="singapore">
+        11:00 am Singapore
+      </div>
     </div>
+  </label>
+</div>
 
-    <div class="slot">
-      <label>
-        <input type="checkbox" id="slot2">
-        <div>
-          <div class="melbourne">
-            Wednesday, 21 October 2026 — 10:00 am Melbourne
-          </div>
-          <div class="singapore">
-            7:00 am Singapore
-          </div>
-        </div>
-      </label>
+<div class="slot">
+  <label>
+    <input type="checkbox" id="slot2">
+    <div>
+      <div class="melbourne">
+        Thursday, 15 October 2026 — 11:00 am Melbourne
+      </div>
+      <div class="singapore">
+        8:00 am Singapore
+      </div>
     </div>
+  </label>
+</div>
 
-    <div class="slot">
-      <label>
-        <input type="checkbox" id="slot3">
-        <div>
-          <div class="melbourne">
-            Thursday, 22 October 2026 — 11:00 am Melbourne
-          </div>
-          <div class="singapore">
-            8:00 am Singapore
-          </div>
-        </div>
-      </label>
+<div class="slot">
+  <label>
+    <input type="checkbox" id="slot3">
+    <div>
+      <div class="melbourne">
+        Friday, 16 October 2026 — 10:00 am Melbourne
+      </div>
+      <div class="singapore">
+        7:00 am Singapore
+      </div>
     </div>
+  </label>
+</div>
 
-    <div class="slot">
-      <label>
-        <input type="checkbox" id="slot4">
-        <div>
-          <div class="melbourne">
-            Thursday, 22 October 2026 — 1:00 pm Melbourne
-          </div>
-          <div class="singapore">
-            10:00 am Singapore
-          </div>
-        </div>
-      </label>
+<div class="slot">
+  <label>
+    <input type="checkbox" id="slot4">
+    <div>
+      <div class="melbourne">
+        Tuesday, 20 October 2026 — 1:00 pm Melbourne
+      </div>
+      <div class="singapore">
+        10:00 am Singapore
+      </div>
     </div>
+  </label>
+</div>
 
-    <div class="slot">
-      <label>
-        <input type="checkbox" id="slot5">
-        <div>
-          <div class="melbourne">
-            Friday, 23 October 2026 — 2:00 pm Melbourne
-          </div>
-          <div class="singapore">
-            11:00 am Singapore
-          </div>
-        </div>
-      </label>
+<div class="slot">
+  <label>
+    <input type="checkbox" id="slot5">
+    <div>
+      <div class="melbourne">
+        Thursday, 22 October 2026 — 11:00 am Melbourne
+      </div>
+      <div class="singapore">
+        8:00 am Singapore
+      </div>
     </div>
+  </label>
+</div>
 
+<div class="slot">
+  <label>
+    <input type="checkbox" id="slot6">
+    <div>
+      <div class="melbourne">
+        Friday, 23 October 2026 — 2:00 pm Melbourne
+      </div>
+      <div class="singapore">
+        11:00 am Singapore
+      </div>
+    </div>
+  </label>
+</div>
     <button type="submit" id="submitButton">
       Submit Availability
     </button>
@@ -227,7 +306,29 @@
   </form>
 
   <div id="message"></div>
+<hr class="separator">
 
+<div class="results-section">
+
+  <h2>Current Availability</h2>
+
+  <p class="results-note">
+    The table below shows the latest responses submitted by participants.
+  </p>
+
+  <button
+    type="button"
+    class="refresh-button"
+    onclick="loadResults()"
+  >
+    Refresh Results
+  </button>
+
+  <div id="resultsTable">
+    Loading current availability...
+  </div>
+
+</div>
 </div>
 
 <script>
@@ -249,12 +350,13 @@ form.addEventListener("submit", async function(event) {
   }
 
   const slots = [
-    document.getElementById("slot1").checked,
-    document.getElementById("slot2").checked,
-    document.getElementById("slot3").checked,
-    document.getElementById("slot4").checked,
-    document.getElementById("slot5").checked
-  ];
+  document.getElementById("slot1").checked,
+  document.getElementById("slot2").checked,
+  document.getElementById("slot3").checked,
+  document.getElementById("slot4").checked,
+  document.getElementById("slot5").checked,
+  document.getElementById("slot6").checked
+];
 
   if (!slots.some(Boolean)) {
     message.textContent = "Please select at least one available time.";
@@ -263,14 +365,14 @@ form.addEventListener("submit", async function(event) {
   }
 
   const data = {
-    name: name,
-    slot1: slots[0] ? "Available" : "Not available",
-    slot2: slots[1] ? "Available" : "Not available",
-    slot3: slots[2] ? "Available" : "Not available",
-    slot4: slots[3] ? "Available" : "Not available",
-    slot5: slots[4] ? "Available" : "Not available"
-  };
-
+  name: name,
+  slot1: slots[0] ? "Available" : "Not available",
+  slot2: slots[1] ? "Available" : "Not available",
+  slot3: slots[2] ? "Available" : "Not available",
+  slot4: slots[3] ? "Available" : "Not available",
+  slot5: slots[4] ? "Available" : "Not available",
+  slot6: slots[5] ? "Available" : "Not available"
+};
   submitButton.disabled = true;
   submitButton.textContent = "Submitting...";
   message.textContent = "";
@@ -288,7 +390,9 @@ form.addEventListener("submit", async function(event) {
     message.textContent = "Thank you! Your availability has been submitted.";
     message.className = "success";
     form.reset();
-
+setTimeout(function() {
+  loadResults();
+}, 1500);
   } catch (error) {
     message.textContent = "There was a problem submitting your response. Please try again.";
     message.className = "error";
@@ -297,6 +401,121 @@ form.addEventListener("submit", async function(event) {
   submitButton.disabled = false;
   submitButton.textContent = "Submit Availability";
 });
+  function loadResults() {
+  const oldScript = document.getElementById("resultsLoader");
+
+  if (oldScript) {
+    oldScript.remove();
+  }
+
+  const script = document.createElement("script");
+
+  script.id = "resultsLoader";
+  script.src =
+    WEB_APP_URL +
+    "?callback=handleResults&t=" +
+    new Date().getTime();
+
+  document.body.appendChild(script);
+}
+
+function handleResults(data) {
+  const container = document.getElementById("resultsTable");
+
+  if (data.error) {
+    container.innerHTML =
+      "<p>Unable to load results.</p>";
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    container.innerHTML =
+      "<p>No responses have been submitted yet.</p>";
+    return;
+  }
+
+  let html = `
+    <div class="results-wrapper">
+    <table class="results-table">
+
+      <thead>
+        <tr>
+          <th>Name</th>
+
+          <th>
+            Wed 14 Oct<br>
+            2:00 pm
+          </th>
+
+          <th>
+            Thu 15 Oct<br>
+            11:00 am
+          </th>
+
+          <th>
+            Fri 16 Oct<br>
+            10:00 am
+          </th>
+
+          <th>
+            Tue 20 Oct<br>
+            1:00 pm
+          </th>
+
+          <th>
+            Thu 22 Oct<br>
+            11:00 am
+          </th>
+
+          <th>
+            Fri 23 Oct<br>
+            2:00 pm
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+  `;
+
+  data.forEach(person => {
+    html += `
+      <tr>
+        <td>${escapeHtml(person.name)}</td>
+
+        <td>${formatAvailability(person.slot1)}</td>
+        <td>${formatAvailability(person.slot2)}</td>
+        <td>${formatAvailability(person.slot3)}</td>
+        <td>${formatAvailability(person.slot4)}</td>
+        <td>${formatAvailability(person.slot5)}</td>
+        <td>${formatAvailability(person.slot6)}</td>
+      </tr>
+    `;
+  });
+
+  html += `
+      </tbody>
+    </table>
+    </div>
+  `;
+
+  container.innerHTML = html;
+}
+
+function formatAvailability(value) {
+  if (value === "Available") {
+    return `<span class="available">✓</span>`;
+  } else {
+    return `<span class="unavailable">✕</span>`;
+  }
+}
+
+function escapeHtml(text) {
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+loadResults();
 </script>
 
 </body>
